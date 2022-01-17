@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+    
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <title>鬼抓人</title>
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    
+    <!-- JQuery JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    <!-- sweetalert -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+    
+    <style>
+    html, body {
+        background-color: #214F44;
+        font-family: 'Nunito', sans-serif;
+
+    }
+    .count-area {
+        background-color: #fff;
+        border-radius:12px;
+        border-style:dashed;
+        border-width:3px;
+        border-color: grey;
+        font-size: 12px;
+        font-weight: bold;
+    }
+    .player-count {
+        background-color: antiquewhite;
+        border-radius:12px;
+        padding: 5px 0px;
+        margin-bottom: 15px;
+    }
+    .button-area {
+        padding: 20px;
+
+    }
+    #start, #stop, #restart:hover {
+        cursor: pointer;
+    }
+    .game-area {
+        background-color: #fff;
+        height: 85vh;
+
+    }
+    p {
+        margin-top: 1rem;
+
+    }
+    .safe-area {
+        position: absolute;
+        width: 120px;
+        height: 120px;
+        background: #93BF8F;
+    }
+    .safe-text {
+        margin: 25px;
+        padding-top: 20px;
+        font-size: 12px;
+        font-weight: bold;
+    }
+    .top {
+        top: 0;
+    }
+    .right {
+        right: 0;
+    }
+    .bottom {
+        bottom: 0;
+    }
+    .left {
+        left: 0;
+    }
+    .player1-role {
+        width: 80px;
+        height: 80px;
+        position: absolute;
+        top: 50%;
+        left: 20%;
+
+    }
+    .player2-role {
+        width: 80px;
+        height: 80px;
+        position: absolute;
+        top: 20%;
+        right: 50%;
+
+    }
+    .player3-role {
+        width: 80px;
+        height: 80px;
+        position: absolute;
+        top: 50%;
+        right: 20%;
+
+    }
+
+    </style>
+
+</head>
+<body class="goto-here" id="app-layout">
+    
+    <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
+        <div class="container-fluid">
+          <a style="font-weight:bold;font-family:微軟正黑體;font-size:30px" class="navbar-brand" href="/">鬼抓人</a>
+        </div>
+    </nav>
+    <section class="ftco-section ftco-degree-bg">
+        <div class="container-fluid ftco-animate">
+            <div class="col-md-1"></div>
+            <!-- 左邊計分區 -->
+            <div class="col-md-1 mr-lg-4 count-area">
+                <div class="text-center">
+                    <p>Ghost chasing</p>
+                </div>
+                <br>
+                <div class="row justify-content-center">
+                    <img class="img-fluid" src="images/ghost.png"> 
+                </div>
+                <!-- 計時器 -->
+                <div class="row justify-content-center">
+                    <p id="time">60</p>
+                </div>
+                <!-- 各玩家記分板 -->
+                <div class="justify-content-center player-count text-center">
+                    <p id="play1-name">Player 1</p>
+                    <span>Count：</span><span class="count" id="play1-count">1</span>
+                </div>
+                <div class="justify-content-center player-count text-center">
+                    <p id="play2-name">Player 2</p>
+                    <span>Count：</span><span class="count" id="play2-count">2</span>
+                </div>
+                <div class="justify-content-center player-count text-center">
+                    <p id="play3-name">Player 3</p>
+                    <span>Count：</span><span class="count" id="play3-count">2</span>
+                </div>
+                
+            </div>
+            <!-- 中間按扭區 -->
+            <div class="col-md-1 mr-lg-4 button-area">
+                <div class="row justify-content-center mb-4">
+                    <img id="start" class="img-fluid" src="images/start.png"> 
+                </div>
+                <div class="row justify-content-center mb-4">
+                    <img id="stop" class="img-fluid" src="images/stop.png"> 
+                </div>
+                <div class="row justify-content-center mb-4">
+                    <img id="restart" class="img-fluid" src="images/restart.png"> 
+                </div>
+            </div>
+
+            <!-- 右邊遊戲區 -->
+            <div class="col-md-8 game-area">
+                <!-- 安全區域 -->
+                <div class="top left safe-area">
+                    <p class="safe-text text-center">
+                        Safe 1
+                    </p>
+                </div>
+                <div class="top right safe-area">
+                    <p class="safe-text text-center">
+                        Safe 2
+                    </p>
+                </div>
+                <div class="bottom left safe-area">
+                    <p class="safe-text text-center">
+                        Safe 3
+                    </p>
+                </div>
+                <div class="bottom right safe-area">
+                    <p class="safe-text text-center">
+                        Safe 4
+                    </p>
+                </div>
+                <!-- 3個玩家 -->
+                <div class="player1-role" id="player1-role">
+                    <img id="player1" class="player img-fluid" src="images/player1.png"> 
+                    <p class="text-center">
+                        player 1
+                    </p>
+                </div>
+                <div class="player2-role" id="player2-role">
+                    <img id="player2" class="player img-fluid" src="images/player2.png"> 
+                    <p class="text-center">
+                        player 2
+                    </p>
+                </div>
+                <div class="player3-role" id="player3-role">
+                    <img id="player3" class="player img-fluid" src="images/player3.png"> 
+                    <p class="text-center">
+                        player 3
+                    </p>
+                </div>
+
+            </div>
+            <div class="col-md-1"></div>
+
+        </div>
+    </section>
+    
+    <script>
+        
+        var time = 60, Timer, ghost, minimum = 99, winner = null, loser = null, tie = [];
+        // 倒數計時
+        function Counter() {
+            time = --time;
+            $("#time").html(time);
+            // 時間到
+            if(time==0) {
+                clearInterval(Timer);
+                // 背景變紅
+                $('.game-area').css('background-color','red');
+                // 跳出 alert
+                Swal.fire({
+                  title: 'Timeout',
+                  icon: 'warning',
+                  confirmButtonColor: '#335B80'
+                }).then((result) => {
+                      if (result.value) {
+                          // 點OK後根據count計算誰是贏家
+                          $("span[class='count']").each(function(index) {
+                            // 排除鬼
+    //                        console.log('鬼是player'+ghost);
+                             if(this.id != ("play"+ghost+"-count")) {
+    //                            console.log('現在是player'+(index+1));
+                                 var value = parseInt($(this).html());
+                                // 計算最少
+                                 if(value < minimum) {
+                                     minimum = value;
+                                    // 贏家
+                                     winner = (index+1);
+                                 }else if(value == minimum) {
+                                     // 平手
+                                     tie = tie.push('player'+(index+1));
+                                 }else {
+                                     loser = (index+1);
+                                 }
+
+                              }
+                           });
+                           console.log(tie);
+                           // 顯示誰贏
+                           if(tie.length == 0) {
+                               Swal.fire({
+                                  title: 'player'+winner+' wins<br>player'+loser+' loses',
+                                  text: 'time left： '+time,
+                                  imageUrl: 'images/congratulation.png',
+                                  confirmButtonColor: '#335B80'
+                               }).then((result) => {
+                                   if (result.value) {
+                                        // 點OK後重新整理
+                                        window.location.reload();
+                                   }
+                               });
+                               
+                           }else { // 打成平手
+                               Swal.fire({
+                                  title: 'The game ended in a tie.',
+                                  text: 'time left： '+time,
+                                  imageUrl: 'images/tie.png',
+                                  confirmButtonColor: '#335B80'
+                               }).then((result) => {
+                                   if (result.value) {
+                                        // 點OK後重新整理
+                                        window.location.reload();
+                                   }
+                               });
+                               
+                           }
+                           
+                       }
+                 });
+             }
+        }
+        
+        // 開始計時
+        $('#start').click(function() {
+            
+            Timer = setInterval(Counter, 1000);
+            // 隨機 1~3
+            ghost = 1 + Math.floor(Math.random() * 3);
+            //指定一個變鬼
+            $('#player'+ghost).attr("src", "images/ghost.png");
+            //當按下開始後，建立鍵盤的監聽
+            document.addEventListener('keydown', moveSection);
+   
+        });
+        // 暫停計時
+        $('#stop').click(function() {
+            
+            clearInterval(Timer);
+            // 所有按鍵不能動
+            document.removeEventListener('keydown', moveSection);
+            
+        });
+        
+        // 重新整理頁面
+        $('#restart').click(function() {
+            
+            window.location.reload();
+            
+        });
+        
+        // 輸入各玩家名字
+        // sweetalert2 modal
+        $(document).ready(function(){
+            Swal.mixin({
+              input: 'text',
+              inputPlaceholder: "player's name",
+              inputValidator: (value) => {
+                if (!value) {
+                  return "Please enter player's name";
+                }
+              },
+              confirmButtonText: 'Next player',
+              confirmButtonColor: '#335B80',
+              progressSteps: ['1', '2', '3'],
+              progressStepsDistance: '20px',
+              allowOutsideClick: false,
+              allowEscapeKey: false,
+                
+            }).queue([
+              {
+                 title: "Enter Player1's name",
+              },
+              "Enter Player2's name", 
+              {
+                 title: "Enter Player3's name",
+                 confirmButtonText: 'OK',
+              }
+            ]).then((result) => {
+              if (result.value) {
+                  
+                // 記分板名字更改
+                $('#play1-name').html(result.value[0]);
+                $('#play2-name').html(result.value[1]);
+                $('#play3-name').html(result.value[2]);
+
+              }
+            });
+            
+            
+        })
+        
+        // 輸入玩家名字的 modal 沒輸入完不能點任何地方或鍵盤關閉 modal
+        $('#myModal').modal({
+            backdrop: 'static', 
+            keyboard: false
+        });
+        
+         //針對角色1做鍵盤控制(上下左右)
+         var player1 = document.getElementById("player1-role");
+         //針對角色2做鍵盤控制(WASD)
+         var player2 = document.getElementById("player2-role");
+         //針對角色3做鍵盤控制(IJKL)
+         var player3 = document.getElementById("player3-role");
+         //儲存三個角色的位置陣列
+         var palyer1Pos = [player1.offsetLeft,player1.offsetTop] , palyer2Pos = [player2.offsetLeft,player2.offsetTop] , palyer3Pos = [player3.offsetLeft,player3.offsetTop] 
+         
+         function moveSection(e) {
+            switch(e.keyCode) {
+                //player1的控制上下左右
+                case 37: //左
+                    player1.style.left = Math.max(0, player1.offsetLeft - 5) + "px";
+                    palyer1Pos = [player1.offsetLeft,player1.offsetTop] //只要移動便更新角色位置
+                    Ghost(); //判斷鬼是否抓到人
+                    break;
+                case 38: //上
+                    player1.style.top = Math.max(0, player1.offsetTop - 5) + "px";
+                    palyer1Pos = [player1.offsetLeft,player1.offsetTop]
+                    Ghost();
+                    break;
+                case 39: //右
+                    player1.style.left = Math.min(750, player1.offsetLeft + 5) + "px";
+                    palyer1Pos = [player1.offsetLeft,player1.offsetTop]
+                    Ghost();
+                    break;
+                case 40: //下
+                    player1.style.top = Math.min(395, player1.offsetTop + 5) + "px";
+                    palyer1Pos = [player1.offsetLeft,player1.offsetTop]
+                    Ghost();
+                    break;
+                //player2的控制上下左右
+                case 65: //左(A)
+                    player2.style.left = Math.max(0, player2.offsetLeft - 5) + "px";
+                    palyer2Pos = [player2.offsetLeft,player2.offsetTop]
+                    Ghost();
+                    break;
+                case 87: //上(W)
+                    player2.style.top = Math.max(0, player2.offsetTop - 5) + "px";
+                    palyer2Pos = [player2.offsetLeft,player2.offsetTop]
+                    Ghost()
+                    break;
+                case 68: //右(D)
+                    player2.style.left = Math.min(750, player2.offsetLeft + 5) + "px";
+                    palyer2Pos = [player2.offsetLeft,player2.offsetTop]
+                    Ghost();
+                    break;
+                case 83: //下(S)
+                    player2.style.top = Math.min(395, player2.offsetTop + 5) + "px";
+                    palyer2Pos = [player2.offsetLeft,player2.offsetTop]
+                    Ghost();
+                    break;
+                //player3的控制上下左右
+                case 74: //左(J)
+                    player3.style.left = Math.max(0, player3.offsetLeft - 5) + "px";
+                    palyer3Pos = [player3.offsetLeft,player3.offsetTop]
+                    Ghost();
+                    break;
+                case 73: //上(I)
+                    player3.style.top = Math.max(0, player3.offsetTop - 5) + "px";
+                    palyer3Pos = [player3.offsetLeft,player3.offsetTop]
+                    Ghost();
+                    break;
+                case 76: //右(L)
+                    player3.style.left = Math.min(750, player3.offsetLeft + 5) + "px";
+                    palyer3Pos = [player3.offsetLeft,player3.offsetTop]
+                    Ghost();
+                    break;
+                case 75: //下(K)
+                    player3.style.top = Math.min(395, player3.offsetTop + 5) + "px";
+                    palyer3Pos = [player3.offsetLeft,player3.offsetTop]
+                    Ghost();
+                    break;
+            }
+        }
+
+        //判斷鬼是否抓到人，若抓到則結束遊戲
+        function Ghost(){
+            switch(ghost){
+                case 1: //當鬼是1號時
+                    var player1_PosX = palyer1Pos[0], player1_PosY = palyer1Pos[1]
+                    if((palyer2Pos[0] <= player1_PosX + 40 && palyer2Pos[0] >= player1_PosX - 40)&&
+                        (palyer2Pos[1] <= player1_PosY + 60 && palyer2Pos[1] >= player1_PosY - 60)){
+                            failAlert(2);        
+                        }
+                    else if((palyer3Pos[0] <= player1_PosX + 40 && palyer3Pos[0] >= player1_PosX - 40)&&
+                        (palyer3Pos[1] <= player1_PosY + 60 && palyer3Pos[1] >= player1_PosY - 60)){
+                            failAlert(3);
+                    }
+                    break;
+                case 2: //當鬼是2號時
+                    var player2_PosX = palyer2Pos[0], player2_PosY = palyer2Pos[1]
+                    if((palyer1Pos[0] <= player2_PosX + 40 && palyer1Pos[0] >= player2_PosX - 40)&&
+                        (palyer1Pos[1] <= player2_PosY + 60 && palyer1Pos[1] >= player2_PosY - 60)){
+                            failAlert(1);
+                        }
+                    else if((palyer3Pos[0] <= player2_PosX + 40 && palyer3Pos[0] >= player2_PosX - 40)&&
+                        (palyer3Pos[1] <= player2_PosY + 60 && palyer3Pos[1] >= player2_PosY - 60)){
+                            failAlert(3);
+                    }
+                    break; 
+                case 3: //當鬼是3號時
+                    var player3_PosX = palyer3Pos[0], player3_PosY = palyer3Pos[1]
+                    if((palyer1Pos[0] <= player3_PosX + 40 && palyer1Pos[0] >= player3_PosX - 40)&&
+                        (palyer1Pos[1] <= player3_PosY + 60 && palyer1Pos[1] >= player3_PosY - 60)){
+                            failAlert(1);
+                        }
+                    else if((palyer2Pos[0] <= player3_PosX + 40 && palyer2Pos[0] >= player3_PosX - 40)&&
+                        (palyer2Pos[1] <= player3_PosY + 60 && palyer2Pos[1] >= player3_PosY - 60)){
+                            failAlert(2);
+                    }
+                    break; 
+            }
+        }
+
+        function failAlert(lose_player){
+            // 背景變紅
+            $('.game-area').css('background-color','red');
+            Swal.fire({
+                title: 'Player ' + ghost + ' Win ! <br>' + 'Player ' + lose_player + ' Lose ! ',
+                text: 'time left： '+ time,
+                imageUrl: 'images/ghost.png',
+                imageWidth: 200,
+                imageHeight: 200,
+                imageAlt: 'Custom image',
+                confirmButtonColor: '#335B80'
+            }).then((result) => {
+                //重新整理頁面
+                window.location.reload();
+            })
+            //計時停止
+            clearInterval(Timer);
+        }
+    </script>
+
+
+</body>
+</html>
